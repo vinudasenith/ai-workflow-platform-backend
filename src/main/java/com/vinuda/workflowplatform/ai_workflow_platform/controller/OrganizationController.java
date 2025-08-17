@@ -16,8 +16,8 @@ public class OrganizationController {
     @Autowired
     private OrganizationService organizationService;
 
+    // register new organization
     @PostMapping("/register")
-
     public Organization registerOrganization(@RequestBody Organization organization) {
         Organization registerOrganization = organizationService.registerOrganization(organization);
         if (registerOrganization == null) {
@@ -26,20 +26,13 @@ public class OrganizationController {
         return registerOrganization;
     }
 
-    @GetMapping("/tenant/{tenantId}")
-    public List<Organization> getOrganizationsByTenantId(@PathVariable String tenantId) {
-        return organizationService.getOrganizationsByTenantId(tenantId);
+    // Get all organization
+    @GetMapping("/all")
+    public List<Organization> getAllOrganizations() {
+        return organizationService.getAllOrganizations();
     }
 
-    @GetMapping("/{id}")
-    public Organization getOrganizationById(@PathVariable String id) {
-        Organization organization = organizationService.getOrganizationById(id);
-        if (organization == null) {
-            return null;
-        }
-        return organization;
-    }
-
+    // delete organization
     @DeleteMapping("/{id}")
     public boolean deleteOrganization(@PathVariable String id) {
         boolean deleted = organizationService.deleteOrganization(id);
