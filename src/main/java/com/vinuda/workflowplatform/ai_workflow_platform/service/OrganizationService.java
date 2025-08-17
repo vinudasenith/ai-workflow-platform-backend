@@ -13,6 +13,7 @@ public class OrganizationService {
     @Autowired
     private OrganizationRepository organizationRepository;
 
+    // register organization
     public Organization registerOrganization(Organization organization) {
         List<Organization> existingOrgs = organizationRepository.findByTenantId(organization.getTenantId());
 
@@ -30,14 +31,12 @@ public class OrganizationService {
 
     }
 
-    public List<Organization> getOrganizationsByTenantId(String tenantId) {
-        return organizationRepository.findByTenantId(tenantId);
+    // get all organizations
+    public List<Organization> getAllOrganizations() {
+        return organizationRepository.findAll();
     }
 
-    public Organization getOrganizationById(String id) {
-        return organizationRepository.findById(id).orElse(null);
-    }
-
+    // delete organization
     public boolean deleteOrganization(String id) {
         if (organizationRepository.existsById(id)) {
             organizationRepository.deleteById(id);
