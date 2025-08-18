@@ -20,6 +20,7 @@ public class Organization {
 
     private String ownerName;
     private String ownerEmail;
-    private boolean approved;
+    private String ownerPassword;
+    private boolean approved = false;
 
 }
