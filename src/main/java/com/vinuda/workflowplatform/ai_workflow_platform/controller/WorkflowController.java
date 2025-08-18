@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/workflow")
+@RequestMapping("/api/workflow")
 
 public class WorkflowController {
 
