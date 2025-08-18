@@ -7,11 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.authentication.AuthenticationManager;
+import com.vinuda.workflowplatform.ai_workflow_platform.security.JwtUtil;
 
 @RestController
 @RequestMapping("/api/user")
@@ -21,11 +25,33 @@ public class UserController {
     @Autowired
     private Userservice userService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
     // Register new user
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerUser(@RequestBody User user) {
-        User registeredUser = userService.registerUser(user);
+        // user.setRole(User.Role.User);
+        // user.setApproved(false);
         Map<String, String> response = new HashMap<>();
+
+        if (user.getRole() == User.Role.SuperAdmin) {
+            response.put("message", "Self-registration as SuperAdmin is not allowed");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        }
+
+        // Force approval workflow
+        user.setApproved(false);
+
+        // If no role provided, default to User
+        if (user.getRole() == null) {
+            user.setRole(User.Role.User);
+        }
+
+        User registeredUser = userService.registerUser(user);
 
         if (registeredUser != null) {
             response.put("message", "User registered successfully,Waiting for admin approval");
@@ -39,10 +65,21 @@ public class UserController {
     // Login user
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@RequestBody User user) {
-        User loggedInUser = userService.loginUser(user.getEmail(), user.getPassword());
-        if (loggedInUser != null) {
-            return ResponseEntity.ok(loggedInUser);
-        } else {
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
+
+            if (authentication.isAuthenticated()) {
+
+                String token = jwtUtil.generateToken(user.getEmail());
+                return ResponseEntity.ok(Map.of(
+                        "token", token,
+                        "email", user.getEmail(),
+                        "role", authentication.getAuthorities()));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
+            }
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials or user not approved yet");
         }
     }
