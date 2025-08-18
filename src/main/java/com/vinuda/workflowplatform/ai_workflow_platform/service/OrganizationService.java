@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+import java.util.UUID;
+
 @Service
 public class OrganizationService {
 
@@ -15,20 +17,42 @@ public class OrganizationService {
 
     // register organization
     public Organization registerOrganization(Organization organization) {
-        List<Organization> existingOrgs = organizationRepository.findByTenantId(organization.getTenantId());
-
-        boolean exists = false;
-        for (Organization org : existingOrgs) {
-            if (org.getName().equals(organization.getName())) {
-                exists = true;
-                break;
+        List<Organization> allOrgs = organizationRepository.findAll();
+        for (Organization org : allOrgs) {
+            if (org.getName().equalsIgnoreCase(organization.getName())) {
+                return null;
             }
         }
-        if (exists) {
-            return null;
-        }
+        organization.setTenantId(UUID.randomUUID().toString());
+        organization.setApproved(false);
         return organizationRepository.save(organization);
 
+    }
+
+    // login organization
+    public Organization loginOrganization(String email, String password) {
+        Organization org = organizationRepository.findByOwnerEmail(email)
+                .orElseThrow(() -> new RuntimeException("Organization not found"));
+
+        if (!org.isApproved()) {
+            throw new RuntimeException("Organization not approved by admin yet");
+        }
+
+        if (!org.getOwnerPassword().equals(password)) {
+            throw new RuntimeException("Invalid credentials");
+        }
+
+        return org;
+    }
+
+    // approve organization
+    public Organization approveOrganization(String organizationId) {
+        Organization org = organizationRepository.findById(organizationId).orElse(null);
+        if (org == null) {
+            throw new RuntimeException("Organization not found");
+        }
+        org.setApproved(true);
+        return organizationRepository.save(org);
     }
 
     // get all organizations
