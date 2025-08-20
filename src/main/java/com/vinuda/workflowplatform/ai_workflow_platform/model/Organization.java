@@ -14,13 +14,17 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Organization {
     @Id
     private String id;
+
     private String name;
     private String tenantId;
     private String description;
+    private String industry;
 
     private String ownerName;
     private String ownerEmail;
     private String ownerPassword;
+    private String phoneNumber;
+
     private boolean approved = false;
 
 }
