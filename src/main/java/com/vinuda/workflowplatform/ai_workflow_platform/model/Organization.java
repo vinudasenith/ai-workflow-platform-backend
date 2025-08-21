@@ -16,9 +16,12 @@ public class Organization {
     private String id;
 
     private String name;
+
     private String tenantId;
+
     private String description;
     private String industry;
+    private String organizationSize;
 
     private String ownerName;
     private String ownerEmail;
