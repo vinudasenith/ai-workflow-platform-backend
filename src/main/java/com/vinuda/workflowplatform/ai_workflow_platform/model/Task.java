@@ -20,6 +20,7 @@ public class Task {
     private String workflowId;
     private String name;
     private String description;
+    private String tenantId;
 
     private LocalDateTime createdAt;
     private TaskStatus status;

@@ -19,5 +19,6 @@ public class Department {
     private String name;
     private String organizationId;
     private String description;
+    private String tenantId;
 
 }
