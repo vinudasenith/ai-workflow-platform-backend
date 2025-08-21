@@ -43,8 +43,9 @@ public class OrganizationController {
         try {
             String email = loginRequest.get("ownerEmail");
             String password = loginRequest.get("ownerPassword");
+            String name = loginRequest.get("name");
 
-            Organization org = organizationService.loginOrganization(email, password);
+            Organization org = organizationService.loginOrganization(email, password, name);
 
             response.put("message", "Login successful");
             response.put("tenantId", org.getTenantId());
