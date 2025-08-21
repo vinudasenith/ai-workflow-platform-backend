@@ -30,7 +30,7 @@ public class OrganizationService {
     }
 
     // login organization
-    public Organization loginOrganization(String email, String password) {
+    public Organization loginOrganization(String email, String password, String name) {
         Organization org = organizationRepository.findByOwnerEmail(email)
                 .orElseThrow(() -> new RuntimeException("Organization not found"));
 
