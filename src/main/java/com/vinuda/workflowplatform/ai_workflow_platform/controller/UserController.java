@@ -141,4 +141,27 @@ public class UserController {
         }
     }
 
+    // Decline user
+    @PutMapping("/decline/{email}")
+    public ResponseEntity<Map<String, String>> declineUser(@PathVariable String email) {
+        boolean isDeclined = userService.declineUser(email); // Implement this in Userservice
+        Map<String, String> response = new HashMap<>();
+        if (isDeclined) {
+            response.put("message", "User declined successfully");
+            return ResponseEntity.ok(response);
+        } else {
+            response.put("message", "User decline failed");
+            return ResponseEntity.ok(response);
+        }
+    }
+
+    // Delete user
+    @DeleteMapping("/{email}")
+    public ResponseEntity<Map<String, String>> deleteUser(@PathVariable String email) {
+        boolean isDeleted = userService.deleteUser(email);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", isDeleted ? "User deleted successfully" : "User deletion failed");
+        return ResponseEntity.ok(response);
+    }
+
 }
