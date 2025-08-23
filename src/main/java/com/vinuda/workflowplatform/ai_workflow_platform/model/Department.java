@@ -17,8 +17,10 @@ public class Department {
     private String id;
 
     private String name;
-    private String organizationId;
+    private String departmentCode;
     private String description;
+
+    private String organizationId;
     private String tenantId;
 
 }
