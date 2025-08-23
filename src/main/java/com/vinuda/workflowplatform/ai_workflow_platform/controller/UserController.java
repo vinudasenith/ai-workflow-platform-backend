@@ -1,7 +1,9 @@
 package com.vinuda.workflowplatform.ai_workflow_platform.controller;
 
+import com.vinuda.workflowplatform.ai_workflow_platform.model.Organization;
 import com.vinuda.workflowplatform.ai_workflow_platform.model.User;
 import com.vinuda.workflowplatform.ai_workflow_platform.service.Userservice;
+import com.vinuda.workflowplatform.ai_workflow_platform.service.OrganizationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,17 +33,21 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @Autowired
+    private OrganizationService organizationService;
+
     // Register new user
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerUser(@RequestBody User user) {
-        // user.setRole(User.Role.User);
-        // user.setApproved(false);
         Map<String, String> response = new HashMap<>();
 
-        if (user.getRole() == User.Role.SuperAdmin) {
-            response.put("message", "Self-registration as SuperAdmin is not allowed");
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(response);
+        Organization org = organizationService.getOrganizationByName(user.getOrganizationName());
+        if (org == null) {
+            response.put("message", "Organization not found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
+
+        user.setTenantId(org.getTenantId());
 
         // Force approval workflow
         user.setApproved(false);
@@ -70,12 +76,14 @@ public class UserController {
                     new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
 
             if (authentication.isAuthenticated()) {
+                User loggedInUser = userService.findByEmail(user.getEmail());
 
                 String token = jwtUtil.generateToken(user.getEmail());
                 return ResponseEntity.ok(Map.of(
                         "token", token,
                         "email", user.getEmail(),
-                        "role", authentication.getAuthorities()));
+                        "tenantId", loggedInUser.getTenantId(),
+                        "role", loggedInUser.getRole().name()));
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
             }
