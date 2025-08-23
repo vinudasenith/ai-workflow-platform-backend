@@ -7,4 +7,7 @@ import java.util.List;
 
 public interface DepartmentRepository extends MongoRepository<Department, String> {
     List<Department> findByOrganizationId(String organizationId);
+
+    Department findByDepartmentCode(String departmentCode);
+
 }
