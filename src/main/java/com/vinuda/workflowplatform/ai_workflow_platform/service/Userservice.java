@@ -80,4 +80,25 @@ public class Userservice {
         return userRepository.findByEmail(email);
     }
 
+    // decline user
+    public boolean declineUser(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            user.setApproved(false);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    // delete user
+    public boolean deleteUser(String email) {
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
+            userRepository.delete(user);
+            return true;
+        }
+        return false;
+    }
+
 }
