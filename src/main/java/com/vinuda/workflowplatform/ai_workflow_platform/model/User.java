@@ -22,8 +22,8 @@ public class User {
     private String firstName;
     private String lastName;
 
-    private String tenantId; // for multi-tenant support
-    private String organizationId; // organization within a tenant
+    private String tenantId;
+    private String organizationName;
 
     private Role role;
 
