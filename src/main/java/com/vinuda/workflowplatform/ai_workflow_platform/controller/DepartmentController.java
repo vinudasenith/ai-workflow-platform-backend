@@ -24,7 +24,7 @@ public class DepartmentController {
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> registerDepartment(@RequestBody Department department) {
 
-        Department registeredDepartment = departmentService.creaDepartment(department);
+        Department registeredDepartment = departmentService.createDepartment(department);
         Map<String, String> response = new HashMap<>();
 
         if (registeredDepartment != null) {
@@ -46,6 +46,20 @@ public class DepartmentController {
     @GetMapping("/organization/{organizationId}")
     public List<Department> getDepartmentsByOrganization(@PathVariable String organizationId) {
         return departmentService.getDepartmentsByOrganization(organizationId);
+    }
+
+    // delete department by ID
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<Map<String, String>> deleteDepartment(@PathVariable String id) {
+        Map<String, String> response = new HashMap<>();
+        try {
+            departmentService.deleteDepartmentByCode(id);
+            response.put("message", "Department deleted successfully");
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        } catch (Exception e) {
+            response.put("message", "Failed to delete department");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
 
 }
