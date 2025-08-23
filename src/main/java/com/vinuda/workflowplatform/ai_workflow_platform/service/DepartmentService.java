@@ -12,16 +12,29 @@ public class DepartmentService {
     @Autowired
     private DepartmentRepository departmentRepository;
 
-    public Department creaDepartment(Department department) {
+    // Create a new department
+    public Department createDepartment(Department department) {
         return departmentRepository.save(department);
     }
 
+    // Get all departments
     public List<Department> getAllDepartments() {
         return departmentRepository.findAll();
     }
 
+    // Get departments by organization
     public List<Department> getDepartmentsByOrganization(String organizationId) {
         return departmentRepository.findByOrganizationId(organizationId);
+    }
+
+    // delete department by id
+    public boolean deleteDepartmentByCode(String departmentCode) {
+        Department dept = departmentRepository.findByDepartmentCode(departmentCode);
+        if (dept != null) {
+            departmentRepository.delete(dept);
+            return true;
+        }
+        return false;
     }
 
 }
