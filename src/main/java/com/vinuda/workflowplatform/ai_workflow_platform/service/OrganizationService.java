@@ -70,4 +70,8 @@ public class OrganizationService {
         }
     }
 
+    public Organization getOrganizationByName(String name) {
+        return organizationRepository.findByName(name).orElse(null);
+    }
+
 }
