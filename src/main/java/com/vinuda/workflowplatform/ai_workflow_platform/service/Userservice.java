@@ -101,4 +101,9 @@ public class Userservice {
         return false;
     }
 
+    // get users by tenantId
+    public List<User> getUsersByTenantId(String tenantId) {
+        return userRepository.findByTenantId(tenantId);
+    }
+
 }
