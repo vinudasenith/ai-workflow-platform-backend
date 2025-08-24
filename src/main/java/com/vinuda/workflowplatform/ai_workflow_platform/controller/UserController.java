@@ -78,6 +78,10 @@ public class UserController {
             if (authentication.isAuthenticated()) {
                 User loggedInUser = userService.findByEmail(user.getEmail());
 
+                if (!loggedInUser.isApproved()) {
+                    return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User not approved yet");
+                }
+
                 String token = jwtUtil.generateToken(user.getEmail());
                 return ResponseEntity.ok(Map.of(
                         "token", token,
@@ -96,6 +100,18 @@ public class UserController {
     @GetMapping("/all")
     public ResponseEntity<List<User>> getAllUsers() {
         List<User> users = userService.getAllUsers();
+        return ResponseEntity.ok(users);
+    }
+
+    // Get all users by tenantId
+    @GetMapping("/tenant/all")
+    public ResponseEntity<List<User>> getAllUsersByTenantId(@RequestHeader("Authorization") String authHeader) {
+        String token = authHeader.substring(7);
+        String email = jwtUtil.extractUsername(token);
+
+        User loggedInUser = userService.findByEmail(email);
+
+        List<User> users = userService.getUsersByTenantId(loggedInUser.getTenantId());
         return ResponseEntity.ok(users);
     }
 
