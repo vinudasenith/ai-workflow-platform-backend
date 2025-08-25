@@ -37,4 +37,9 @@ public class DepartmentService {
         return false;
     }
 
+    // get all departments by tenantId
+    public List<Department> getDepartmentsByTenantId(String tenantId) {
+        return departmentRepository.findByTenantId(tenantId);
+    }
+
 }
