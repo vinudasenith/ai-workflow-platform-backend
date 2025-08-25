@@ -35,4 +35,9 @@ public class WorkflowService {
         return false;
     }
 
+    // get all workflows by tenantId
+    public List<Workflow> getWorkflowsByTenantId(String tenantId) {
+        return workflowRepository.findByTenantId(tenantId);
+    }
+
 }
