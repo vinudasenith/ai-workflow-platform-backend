@@ -12,6 +12,8 @@ public interface TaskRepository extends MongoRepository<Task, String> {
     List<Task> findByWorkflowId(String workflowId);
 
     // Find tasks by status
-    List<Task> findByStatus(Task.TaskStatus status);
+    // List<Task> findByStatus(Task.TaskStatus status);
+
+    List<Task> findByTenantId(String tenantId);
 
 }
