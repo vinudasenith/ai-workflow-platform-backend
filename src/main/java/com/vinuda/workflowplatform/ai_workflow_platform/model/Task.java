@@ -23,9 +23,9 @@ public class Task {
     private String tenantId;
 
     private LocalDateTime createdAt;
-    private TaskStatus status;
+    // private TaskStatus status;
 
-    public enum TaskStatus {
-        PENDING, IN_PROGRESS, COMPLETED, REJECTED
-    }
+    // public enum TaskStatus {
+    // PENDING, IN_PROGRESS, COMPLETED, REJECTED
+    // }
 }
