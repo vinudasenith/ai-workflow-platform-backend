@@ -43,8 +43,19 @@ public class TaskService {
         taskRepository.deleteById(id);
     }
 
+    // Get tasks by tenantId
     public List<Task> getTasksByTenantId(String tenantId) {
         return taskRepository.findByTenantId(tenantId);
+    }
+
+    // get task by id
+    public Task getTaskById(String id) {
+        return taskRepository.findById(id).orElse(null);
+    }
+
+    // update task
+    public Task updateTask(Task task) {
+        return taskRepository.save(task);
     }
 
 }
