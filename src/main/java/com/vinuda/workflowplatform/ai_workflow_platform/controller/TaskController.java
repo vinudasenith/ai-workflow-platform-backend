@@ -17,6 +17,11 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 @RestController
 @RequestMapping("/api/tasks")
 
@@ -110,6 +115,32 @@ public class TaskController {
             return new ResponseEntity<>("Task deleted successfully", HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>("Task not found", HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/{taskId}/upload")
+    public ResponseEntity<?> UploadFile(@PathVariable String taskId, @RequestParam("file") MultipartFile file) {
+        try {
+            Task task = taskService.getTaskById(taskId);
+            if (task == null) {
+                return new ResponseEntity<>("Task not found", HttpStatus.NOT_FOUND);
+            }
+
+            // save the file locally
+            String uploadDir = "C:\\Users\\Vinuda\\Documents\\Project\\workflow-platform\\ai-workflow-platform\\uploads";
+            Path path = Paths.get(uploadDir, file.getOriginalFilename());
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+
+            // Store file path in task
+            task.getFileUrls().add(path.toString());
+            taskService.updateTask(task); // save updated task
+
+            return ResponseEntity.ok("File uploaded successfully");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("File upload failed");
+
         }
     }
 
