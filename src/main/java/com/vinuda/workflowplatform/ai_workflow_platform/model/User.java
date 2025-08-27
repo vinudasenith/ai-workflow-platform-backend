@@ -30,7 +30,7 @@ public class User {
     private boolean approved = false;
 
     public enum Role {
-        SuperAdmin, OrgAdmin, DepartmentAdmin, Staff, User
+        SuperAdmin, OrgAdmin, DepartmentAdmin, Staff, Users
     }
 
 }
