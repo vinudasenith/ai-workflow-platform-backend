@@ -54,7 +54,7 @@ public class UserController {
 
         // If no role provided, default to User
         if (user.getRole() == null) {
-            user.setRole(User.Role.User);
+            user.setRole(User.Role.Users);
         }
 
         User registeredUser = userService.registerUser(user);
@@ -93,6 +93,24 @@ public class UserController {
             }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials or user not approved yet");
+        }
+    }
+
+    // Get own account info
+    @GetMapping("/me")
+    public ResponseEntity<User> getCurrentUser(@RequestHeader("Authorization") String authHeader) {
+        try {
+
+            String token = authHeader.substring(7);
+            String email = jwtUtil.extractUsername(token);
+            User loggedInUser = userService.findByEmail(email);
+
+            if (loggedInUser == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            }
+            return ResponseEntity.ok(loggedInUser);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
