@@ -43,6 +43,7 @@ public class DepartmentController {
         }
 
         String email;
+
         Object principal = authentication.getPrincipal();
         if (principal instanceof UserDetails) {
             email = ((UserDetails) principal).getUsername();
@@ -83,6 +84,7 @@ public class DepartmentController {
         }
 
         String email;
+
         Object principal = authentication.getPrincipal();
         if (principal instanceof UserDetails) {
             email = ((UserDetails) principal).getUsername();

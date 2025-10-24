@@ -94,19 +94,6 @@ public class TaskController {
         return ResponseEntity.ok(tasks);
     }
 
-    // Update Task Status
-    // @PutMapping("/{id}/status")
-    // public ResponseEntity<?> updateTaskStatus(
-    // @PathVariable String id,
-    // @RequestParam Task.TaskStatus status) {
-    // try {
-    // Task updatedTask = taskService.updateTaskStatus(id, status);
-    // return new ResponseEntity<>(updatedTask, HttpStatus.OK);
-    // } catch (RuntimeException e) {
-    // return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
-    // }
-    // }
-
     // Delete Task
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteTask(@PathVariable String id) {
@@ -118,6 +105,7 @@ public class TaskController {
         }
     }
 
+    // Upload file
     @PostMapping("/{taskId}/upload")
     public ResponseEntity<?> UploadFile(@PathVariable String taskId, @RequestParam("file") MultipartFile file) {
         try {
