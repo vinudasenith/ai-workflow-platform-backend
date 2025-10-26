@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
+import org.springframework.beans.factory.annotation.Value;
+
 import java.util.Map;
 import java.util.HashMap;
 
@@ -12,7 +14,9 @@ import java.util.HashMap;
 public class AiValidationService {
 
     private final String OPENAI_URL = "https://api.openai.com/v1/chat/completions";
-    private final String API_KEY = "REMOVED";
+
+    @Value("${openai.api.key}")
+    private String API_KEY;
 
     @SuppressWarnings("unchecked")
     public Map<String, Object> validateForm(Map<String, Object> requestData) throws Exception {
