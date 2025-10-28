@@ -24,7 +24,9 @@ public class AiValidationService {
         Map<String, String> formData = (Map<String, String>) requestData.get("fields");
 
         String prompt = "You are an AI that only returns valid JSON.\n" +
-                "Clean the following data and return corrected fields and warnings in JSON format ONLY.\n" +
+                "Check the following form data for spelling, capitalization, formatting, and word-level errors.\n" +
+                "Correct any mistakes and return the corrected values.\n" +
+                "Also include warnings for any fields that seem unusual, missing, or inconsistent.\n" +
                 "Do NOT include any explanation, quotes, or code fences.\n\n" +
                 "organizationName: " + formData.getOrDefault("organizationName", "") + "\n" +
                 "description: " + formData.getOrDefault("description", "") + "\n" +
@@ -33,8 +35,6 @@ public class AiValidationService {
                 "ownerName: " + formData.getOrDefault("ownerName", "") + "\n" +
                 "ownerEmail: " + formData.getOrDefault("ownerEmail", "") + "\n" +
                 "ownerPassword: " + formData.getOrDefault("ownerPassword", "") + "\n" +
-                "phoneNumber: " + formData.getOrDefault("phoneNumber", "") + "\n" +
-                "\n" +
                 "Return JSON with keys 'correctedFields' and 'warnings'. Only return these keys.";
 
         Map<String, Object> message = new HashMap<>();
